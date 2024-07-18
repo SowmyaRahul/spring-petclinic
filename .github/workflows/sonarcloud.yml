@@ -45,8 +45,8 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: petclinic
-          path: target/spring-petclinic-3.3.0-SNAPSHOT.jar
+          name: spring-petclinic-3.3.0-SNAPSHOT.jar
+          path: target
 
       - name: Build and push Docker image to ECR
         env:
