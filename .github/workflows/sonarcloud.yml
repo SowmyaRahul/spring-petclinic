@@ -33,7 +33,7 @@ jobs:
          distribution: 'adopt'
         
       - name: Build with Maven
-        run: mvn package -f ../pom.xml -DskipTests
+        run: mvn package -f ./pom.xml -DskipTests
 
 
       - name: Upload artifact
