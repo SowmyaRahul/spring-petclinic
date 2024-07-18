@@ -33,7 +33,10 @@ jobs:
          distribution: 'adopt'
         
       - name: Build with Maven
-        run: mvn -f ./pom.xml package -DskipTests
+        working-directory: ./
+        run: |
+           ls -l /home/runner/work/spring-petclinic/spring-petclinic/
+           mvn -f pom.xml package -DskipTests
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
@@ -47,6 +50,7 @@ jobs:
          ECR_REPOSITORY: 1petclinic
          IMAGE_TAG: ${{ github.sha }}
         run: |
+            
             docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
 
             aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
