@@ -33,7 +33,7 @@ jobs:
       - name: Set up JDK 
         uses: actions/setup-java@v4
         with:
-         java-version: '11'
+         java-version: '17'
          distribution: 'adopt'
         
       - name: Build with Maven
@@ -46,7 +46,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: petclinic
-          path: target/petclinic.jar
+          path: target/spring-petclinic-3.3.0-SNAPSHOT.jar
 
       - name: Build and push Docker image to ECR
         env:
