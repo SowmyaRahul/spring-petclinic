@@ -33,3 +33,17 @@ jobs:
         
       - name: Build with Maven
         run: mvn package
+
+      - name: Build and push Docker image to ECR
+        env:
+         ECR_REGISTRY: 637423519309.dkr.ecr.ap-southeast-2.amazonaws.com/1petclinic
+         ECR_REPOSITORY: 1petclinic
+         IMAGE_TAG: ${{ github.sha }}
+        run: |
+            docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+
+            aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
+
+        
+            docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+    
