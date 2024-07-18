@@ -61,8 +61,8 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t petclinic:latest .
-          docker tag petclinic:latest ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/1petclinic:latest
+          docker build -t 1petclinic:latest .
+          docker tag 1petclinic:latest ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/1petclinic:latest
         env:
            AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
            AWS_REGION: ${{ secrets.AWS_REGION }}
