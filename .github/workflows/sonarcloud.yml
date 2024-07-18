@@ -33,9 +33,9 @@ jobs:
          distribution: 'adopt'
         
       - name: Build with Maven
-        working-directory: ./
+        working-directory: .
         run: |
-           ls -l /home/runner/work/spring-petclinic/spring-petclinic/
+           pwd && ls -la
            mvn -f pom.xml package -DskipTests
 
       - name: Upload artifact
