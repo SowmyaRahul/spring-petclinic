@@ -48,17 +48,43 @@ jobs:
           name: spring-petclinic-3.3.0-SNAPSHOT.jar
           path: target
 
-      - name: Build and push Docker image to ECR
-        env:
-         ECR_REGISTRY: 637423519309.dkr.ecr.ap-southeast-2.amazonaws.com/1petclinic
-         ECR_REPOSITORY: 1petclinic
-         IMAGE_TAG: ${{ github.sha }}
-        run: |
-            
-            docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+         aws-region: us-west-2  # Replace with your AWS region
 
-            aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
+      - name: Log in to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build Docker image
+        run: |
+         docker build -t petclinic:latest .
+         docker tag petclinic:latest ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/petclinic:latest
+         env:
+           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+           AWS_REGION: ${{ secrets.AWS_REGION }}
+
+      - name: Push Docker image to ECR
+        run: |
+           docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/your-repository-name:latest
+        env:
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+
+      # - name: Build and push Docker image to ECR
+      #   env:
+      #    ECR_REGISTRY: 637423519309.dkr.ecr.ap-southeast-2.amazonaws.com/1petclinic
+      #    ECR_REPOSITORY: 1petclinic
+      #    IMAGE_TAG: ${{ github.sha }}
+      #   run: |
+            
+      #       docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+
+      #       aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
 
         
-            docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+      #       docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
     
